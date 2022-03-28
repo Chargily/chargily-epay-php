@@ -24,7 +24,7 @@ class RedirectUrl
      *
      * @var \Chargily\ePay\Core\Configurations
      */
-    protected Configurations $configurations;
+    protected $configurations;
     /**
      * cachedResponse
      *
