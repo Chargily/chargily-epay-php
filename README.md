@@ -88,7 +88,7 @@ if ($chargily->checkResponse()) {
                             "tos" => 1,
                             "mode" => "EDAHABIA",
                             "invoice_token" => "randoom_token_here",
-                            "due_amount" => 25725,
+                            "due_amount" => 10000,
                             "created_at" => "2022-01-01 06:10:38",
                             "updated_at" => "2022-01-01 06:13:00",
                             "back_url" => "https://www.mydomain.com/success",
