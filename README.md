@@ -2,8 +2,8 @@
 
 ![Chargily ePay Gateway](https://raw.githubusercontent.com/Chargily/epay-gateway-php/main/assets/banner-1544x500.png "Chargily ePay Gateway")
 
-Make your integration via Chargily ePay Gateway easier
-- ePay Home page [Click here](https://epay.chargily.com.dz)
+Make your integration with Chargily ePay Gateway easier
+- ePay by Chargily [Platform](https://epay.chargily.com.dz)
 - **If you are using another programing language** [Please Click here](https://github.com/Chargily/epay-gateway-php/blob/master/README_API.md)
 # Installation
 1. Via Composer (Recomended)
