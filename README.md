@@ -19,21 +19,33 @@ composer require chargily/epay-gateway
 We do not recommend this option. But be careful to download the updated versions every a while [Download](https://github.com/Chargily/epay-gateway-php/releases/)
 # Quick start
 
-1. create redirect file **redirect.php**
+1. create config file **epay_config.php**
+This is where store your api credentials
+
+```php
+//  Configurations file
+return [
+    'key' => 'your-api-key', // you can you found it on your epay.chargily.com.dz Dashboard
+    'secret' => 'your-api-secret', // you can you found it on your epay.chargily.com.dz Dashboard
+];
+```
+2. create payment redirection file **redirect.php**
 
 ```php
 use Chargily\ePay\Chargily;
 
 require 'path-to-vendor/vendor/autoload.php';
 
+$epay_config = require 'epay_config.php';
+
 $chargily = new Chargily([
-    //crenditionals
-    'api_key' => 'your-api-key', // you can you found it on your epay.chargily.com.dz Dashboard
-    'api_secret' => 'your-api-secret', // you can you found it on your epay.chargily.com.dz Dashboard
+    //credentials
+    'api_key' => $epay_config['key'],
+    'api_secret' => $epay_config['secret'],
     //urls
     'urls' => [
         'back_url' => "valid-url-to-redirect-after-payment", // this is where client redirected after payment processing
-        'webhook_url' => "valid-url-to-process-after-payment-sucess", // this is where you recieve payment informations
+        'webhook_url' => "valid-url-to-receive-payment-informations", // this is where you receive payment informations
     ],
     //mode
     'mode' => 'EDAHABIA', //OR CIB
@@ -59,7 +71,7 @@ if($redirectUrl){
     echo "We cant redirect to your payment now";
 }
 ```
-2. create processing file **process.php**
+3. create payment processing file **process.php**
 
 ```php
 
@@ -67,10 +79,12 @@ use Chargily\ePay\Chargily;
 
 require 'path-to-vendor/vendor/autoload.php';
 
+$epay_config = require 'epay_config.php';
+
 $chargily = new Chargily([
-    //crenditionals
-    'api_key' => 'your-api-key',
-    'api_secret' => 'your-api-secret',
+    //credentials
+    'api_key' => $epay_config['key'],
+    'api_secret' => $epay_config['secret'],
 ]);
 
 if ($chargily->checkResponse()) {
