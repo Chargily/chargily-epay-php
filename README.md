@@ -43,7 +43,7 @@ $chargily = new Chargily([
         'client_name' => 'client name', // Client name
         'client_email' => 'client_email@mail.com', // This is where client receive payment receipt after confirmation
         'amount' => 75, //this the amount must be greater than or equal 75 
-        'discount' => 0, //this is discount percentage between 0 and 99.99
+        'discount' => 0, //this is discount percentage between 0 and 99
         'description' => 'payment-description', // this is the payment description
 
     ]
@@ -122,7 +122,7 @@ if ($chargily->checkResponse()) {
 | payment[client_name]  | must be string                                                                                        |   required   | not required |
 | payment[client_email] | must be string and valid email This is where client receive payment receipt after confirmation        |   required   | not required |
 | payment[amount]       | must be numeric and greather or equal than  75                                                        |   required   | not required |
-| payment[discount]     | must be numeric and between 0 and 99.99  (discount by percentage)                                     |   required   | not required |
+| payment[discount]     | must be numeric and between 0 and 99  (discount in %)                                     |   required   | not required |
 | payment[description]  | must be string                                                                                        |   required   | not required |
 | options               | must be array                                                                                         |   required   | not required |
 | options[headers]      | must be array                                                                                         |   required   | not required |
