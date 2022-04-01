@@ -81,7 +81,7 @@ We will send you operation responce via already sent "webhook_url".
         //@Todo: check invoice status first ($payment["invoice"]["status"] === 'paid')
         if($payment["invoice"]["status"] === 'paid'){
             //@Todo: confirm order
-        }elseif($payment["invoice"]["status"] === 'paid'){
+        }elseif($payment["invoice"]["status"] === 'failed'){
             //@Todo: do anything when payment failed
         }
     }
