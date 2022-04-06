@@ -138,9 +138,6 @@ if ($chargily->checkResponse()) {
 | payment[amount]       | must be numeric and greather or equal than  75                                                        |   required   | not required |
 | payment[discount]     | must be numeric and between 0 and 99  (discount in %)                                     |   required   | not required |
 | payment[description]  | must be string                                                                                        |   required   | not required |
-| options               | must be array                                                                                         |   required   | not required |
-| options[headers]      | must be array                                                                                         |   required   | not required |
-| options[timeout]      | must be numeric                                                                                       |   required   | not required |
 
 # Notice
 - If you faced Issues [Click here to open one](https://github.com/Chargily/epay-gateway-php/issues/new)
