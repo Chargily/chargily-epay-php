@@ -2,9 +2,14 @@
 
 ![Chargily ePay Gateway](https://raw.githubusercontent.com/Chargily/epay-gateway-php/main/assets/banner-1544x500.png "Chargily ePay Gateway")
 
-Make your integration via Chargily ePay Gateway easier
-- ePay Home page [Click here](https://epay.chargily.com.dz)
-- **If you are using another programing language** [Please Click here](https://github.com/Chargily/epay-gateway-php/blob/master/README_API.md)
+Integrate ePayment gateway with Chargily easily.
+- Currently support payment by **CIB / EDAHABIA** cards and soon by **Visa / Mastercard** 
+- This is a **PHP package**, If you are using another programing language [Browse here](https://github.com/Chargily/) or look to [API documentation](https://github.com/Chargily/epay-gateway-php/blob/master/README_API.md)
+
+# Requirements
+1. PHP 7.2.5 or later. 
+2. Get your API Key/Secret from [ePay by Chargily](https://epay.chargily.com.dz) dashboard for free.
+
 # Installation
 1. Via Composer (Recomended)
 ```bash
@@ -14,21 +19,33 @@ composer require chargily/epay-gateway
 We do not recommend this option. But be careful to download the updated versions every a while [Download](https://github.com/Chargily/epay-gateway-php/releases/)
 # Quick start
 
-1. create redirect file **redirect.php**
+1. create config file **epay_config.php**
+This is where store your api credentials
+
+```php
+//  Configurations file
+return [
+    'key' => 'your-api-key', // you can you found it on your epay.chargily.com.dz Dashboard
+    'secret' => 'your-api-secret', // you can you found it on your epay.chargily.com.dz Dashboard
+];
+```
+2. create payment redirection file **redirect.php**
 
 ```php
 use Chargily\ePay\Chargily;
 
 require 'path-to-vendor/vendor/autoload.php';
 
+$epay_config = require 'epay_config.php';
+
 $chargily = new Chargily([
-    //crenditionals
-    'api_key' => 'your-api-key', // you can you found it on your epay.chargily.com.dz Dashboard
-    'api_secret' => 'your-api-secret', // you can you found it on your epay.chargily.com.dz Dashboard
+    //credentials
+    'api_key' => $epay_config['key'],
+    'api_secret' => $epay_config['secret'],
     //urls
     'urls' => [
         'back_url' => "valid-url-to-redirect-after-payment", // this is where client redirected after payment processing
-        'webhook_url' => "valid-url-to-process-after-payment-sucess", // this is where you recieve payment informations
+        'webhook_url' => "valid-url-to-receive-payment-informations", // this is where you receive payment informations
     ],
     //mode
     'mode' => 'EDAHABIA', //OR CIB
@@ -38,7 +55,7 @@ $chargily = new Chargily([
         'client_name' => 'client name', // Client name
         'client_email' => 'client_email@mail.com', // This is where client receive payment receipt after confirmation
         'amount' => 75, //this the amount must be greater than or equal 75 
-        'discount' => 0, //this is discount percentage between 0 and 99.99
+        'discount' => 0, //this is discount percentage between 0 and 99
         'description' => 'payment-description', // this is the payment description
 
     ]
@@ -54,7 +71,7 @@ if($redirectUrl){
     echo "We cant redirect to your payment now";
 }
 ```
-2. create processing file **process.php**
+3. create payment processing file **process.php**
 
 ```php
 
@@ -62,10 +79,12 @@ use Chargily\ePay\Chargily;
 
 require 'path-to-vendor/vendor/autoload.php';
 
+$epay_config = require 'epay_config.php';
+
 $chargily = new Chargily([
-    //crenditionals
-    'api_key' => 'your-api-key',
-    'api_secret' => 'your-api-secret',
+    //credentials
+    'api_key' => $epay_config['key'],
+    'api_secret' => $epay_config['secret'],
 ]);
 
 if ($chargily->checkResponse()) {
