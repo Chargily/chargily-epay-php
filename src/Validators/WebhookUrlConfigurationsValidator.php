@@ -3,6 +3,7 @@
 namespace Chargily\ePay\Validators;
 
 use Chargily\ePay\Exceptions\InvalidConfigurationsException;
+use Chargily\ePay\Exceptions\ValidationException;
 
 class WebhookUrlConfigurationsValidator
 {
@@ -35,17 +36,19 @@ class WebhookUrlConfigurationsValidator
      * @param  array $array
      * @return true
      */
-    public function validate()
+    public function validate() : array
     {
-        $array = $this->configurations;
-        //
-        if (!isset($array['api_key']) or !is_string($array['api_key'])) {
-            $this->throwException("configurations.api_key is required and must be string");
+        $configurations = $this->configurations;
+        $validator = new Validator;
+        $validation = $validator->make($configurations, [
+            "api_key"               =>      "required",
+            "api_secret"            =>      "required"
+        ]);
+        $validation->validate();
+        if ($validation->fails()) {
+            throw new ValidationException($validation->errors());
         }
-        if (!isset($array['api_secret']) or !is_string($array['api_secret'])) {
-            $this->throwException("configurations.api_secret is required and must be string");
-        }
-        return $array;
+        return $configurations;
     }
     /**
      * throwException

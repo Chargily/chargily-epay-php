@@ -8,104 +8,97 @@ use Chargily\ePay\Exceptions\InvalidResponseException;
 class RedirectUrl
 {
     /**
-     * create payment api url
-     *
      * @var string
+     * The endpoint for create payments
      */
-    protected $api_url = 'http://epay.chargily.com.dz/api/invoice';
+    protected string $api_url = 'http://epay.chargily.com.dz/api/invoice';
+
     /**
-     * method
-     *
      * @var string
+     * The http method for the api endpoint
      */
-    protected $method = 'POST';
+    protected string $method = 'POST';
+
     /**
-     * configurations
-     *
-     * @var \Chargily\ePay\Core\Configurations
+     * @var Configuration
+     * Store the configurations wrapped over Configuration class
      */
-    protected $configurations;
+    protected Configuration $configurations;
+
     /**
-     * cachedResponse
-     *
      * @var object
      */
     protected $cachedResponse = null;
 
     /**
-     * __construct
-     *
-     * @param  Chargily\ePay\Core\Configurations $configurations
-     * @return void
+     * @param configurations
      */
-    public function __construct(Configurations $configurations)
+    public function __construct(Configuration $configurations)
     {
         $this->configurations = $configurations;
     }
 
     /**
-     * send
-     *
+     * @method getRedirectUrl
+     * This method is responsible for getting redirect url to payment
+     * @throws InvalidResponseException
      * @return string
      */
-    public function getRedirectUrl()
+    public function getRedirectUrl() : string
     {
-        $this->validateResponse();
-        //get response
-        $response = $this->getResponse();
-        //get response content
-        $content = $response->getBody()->getContents();
-        //convert json to php array
-        $content_to_array = json_decode($content, true);
-        //
+        if ($response = $this->validateResponse() AND $response !== true) {
+            throw new InvalidResponseException("Invalid response status code ({$response->getStatusCode()}) when trying to get redirect url . More info (" . $response->getBody()->getContents() . ')');
+        }
+
+        $response = $this->getResponse()->getBody()->getContents();
+        $content_to_array = json_decode($response, true);
         return $content_to_array['checkout_url'];
     }
+
     /**
-     * getResponse
-     *
+     * @method getResponse
      * @return Request
      */
     protected function getResponse()
     {
         return $this->cachedResponse = ($this->cachedResponse) ? $this->cachedResponse : (new Client())->request($this->method, $this->api_url, $this->buildRequest());
     }
+
     /**
-     * validateResponse
-     *
-     * @return void
+     * @method validateResponse
+     * @return mixed
      */
-    protected function validateResponse()
+    protected function validateResponse() : mixed
     {
-
         $response = $this->getResponse();
-
-        if (!in_array($response->getStatusCode(), ['201'])) {
-            throw new InvalidResponseException("Invalid response status code ({$response->getStatusCode()}) when trying to get redirect url . More info (" . $response->getBody()->getContents() . ')');
+        if ($response->getStatusCode() !== 201) {
+            return $response;
         }
+
+        return true;
     }
     /**
-     * buildRequest
-     *
+     * @method buildRequest
      * @return array
      */
-    protected function buildRequest()
+    protected function buildRequest() : array
     {
-        $headers = array_merge(['Accept' => 'application/json', 'X-Authorization' => $this->configurations->getApikey()], $this->configurations->getOptionsHeaders());
+        $headers = array_merge(['Accept' => 'application/json', 'X-Authorization' => $this->configurations->getApiKey()], $this->configurations->from("options")->getHeaders());
         return [
-            'allow_redirects' => false,
-            'http_errors' => false,
-            'timeout' => $this->configurations->getOptionsTimeout(),
-            'headers' => $headers,
-            'form_params' => [
-                'client' => $this->configurations->getPaymentClientName(),
-                'client_email' => $this->configurations->getPaymentClientEmail(),
-                'invoice_number' => $this->configurations->getPaymentNumber(),
-                'amount' => $this->configurations->getPaymentAmount(),
-                'discount' => $this->configurations->getPaymentDiscount(),
-                'back_url' => $this->configurations->getBackUrl(),
-                'webhook_url' => $this->configurations->getWebhookUrl(),
-                'mode' => $this->configurations->getMode(),
-                'comment' => $this->configurations->getPaymentDescription(),
+            'allow_redirects'   => false,
+            'http_errors'       => false,
+            'timeout'           => $this->configurations->from("options")->getTimeout(),
+            'headers'           => $headers,
+            'form_params'       => [
+                'client'            =>  $this->configurations->from("payment")->getClientName(),
+                'client_email'      =>  $this->configurations->from("payment")->getClientEmail(),
+                'invoice_number'    =>  $this->configurations->from("payment")->getNumber(),
+                'amount'            =>  $this->configurations->from("payment")->getAmount(),
+                'discount'          =>  $this->configurations->from("payment")->getDiscount(),
+                'back_url'          =>  $this->configurations->from("urls")->getBackUrl(),
+                'webhook_url'       =>  $this->configurations->from("urls")->getWebhookUrl(),
+                'mode'              =>  $this->configurations->getMode(),
+                'comment'           =>  $this->configurations->from("payment")->getDescription(),
             ]
         ];
     }

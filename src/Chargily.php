@@ -2,7 +2,7 @@
 
 namespace Chargily\ePay;
 
-use Chargily\ePay\Core\Configurations;
+use Chargily\ePay\Core\Configuration;
 use Chargily\ePay\Core\RedirectUrl;
 use Chargily\ePay\Core\WebhookUrl;
 
@@ -13,38 +13,31 @@ class Chargily
      *
      * @var Configurations
      */
-    protected $configurations;
+    protected Configuration $configurations;
     /**
      * cachedUrl
      *
      * @var null|string
      */
-    protected $cachedRedirectUrl = null;
+    protected ?string $cachedRedirectUrl = null;
     /**
      * __construct
      *
      * @param  array|Configurations $configurations
      * @return void
      */
-    public function __construct($configurations)
+    public function __construct(array|Configuration $configurations)
     {
-        if ($configurations instanceof Configurations) {
-            $this->configurations = $configurations;
-        } elseif (is_array($configurations)) {
-            $this->configurations = new Configurations($configurations);
-        } else {
-            throw new \Exception(static::class . "::__construct(\$configurations) . \$configurations argument must be instance of " . Configurations::class . " or an array", 1);
-        }
+        $this->configurations = new Configuration($configurations);
+        $this->configurations->validateRedirectConfigurations();
     }
     /**
      * getRedirectUrl
      *
      * @return null|string
      */
-    public function getRedirectUrl()
-    {
-        $this->configurations->validateRedirectConfigurations();
-        //
+    public function getRedirectUrl() : string
+    {   
         return $this->cachedRedirectUrl = ($this->cachedRedirectUrl) ? $this->cachedRedirectUrl : (new RedirectUrl($this->configurations))->getRedirectUrl();
     }
     /**
