@@ -136,7 +136,7 @@ if ($chargily->checkResponse()) {
 | payment[client_name]  | must be string                                                                                        |   required   | not required |
 | payment[client_email] | must be string and valid email This is where client receive payment receipt after confirmation        |   required   | not required |
 | payment[amount]       | must be numeric and greather or equal than  75                                                        |   required   | not required |
-| payment[discount]     | must be numeric and between 0 and 99  (discount in %)                                     |   required   | not required |
+| payment[discount]     | must be numeric and between 0 and 99.99  (discount percentage)                                        |   required   | not required |
 | payment[description]  | must be string                                                                                        |   required   | not required |
 
 # Notice
