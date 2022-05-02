@@ -4,6 +4,7 @@ namespace Chargily\ePay\Validators;
 
 use Chargily\ePay\Exceptions\InvalidConfigurationsException;
 use Chargily\ePay\Exceptions\ValidationException;
+use Rakit\Validation\Validator;
 
 class WebhookUrlConfigurationsValidator
 {
