@@ -15,10 +15,10 @@ class Configuration
     protected $configurations = [];
 
     /**
-     * @var string configPrefix
-     * store the prefix of desired configuration , get from payment client email , the prefix is payment
+     * @var array configPrefix
+     * store the prefix of desired configuration , example: get from payment client email , the prefix is payment
      */
-    public ?string $configPrefix = null;
+    public array $configPrefixs = [];
 
     /**
      * @param array configurations
@@ -43,18 +43,15 @@ class Configuration
             throw new \Exception("Undefined getter");
         }
         $method = Str::snake($name, "_");
-        if ($this->configPrefix !== null) {
-            if (! array_key_exists($method, $this->configurations[$this->configPrefix])) {
-                throw new \Exception("Undefined configuration ".$this->configPrefix.".".$method);
-            }
-            $value =  $this->configurations[$this->configPrefix][$method];
+        if (! empty($this->configPrefixs)) {
+            $value =  $this->resolveConfigurationsWithPrefix($this->configPrefixs, $method);
         }else {
             if (! array_key_exists($method, $this->configurations)) {
                 throw new \Exception("Undefined configuration ".$method);
             }
             $value = $this->configurations[$method];
         }
-        $this->configPrefix = null;
+        $this->configPrefixs = [];
         return $value;
     }
 
@@ -66,28 +63,34 @@ class Configuration
      */
     public function from(string $key) : Configuration 
     {
-        $this->configPrefix = $key;
+        $prefixes = explode(".", $key);
+        foreach($prefixes as $prefix) {
+            array_push($this->configPrefixs, $prefix);
+        }
         return $this;
     }
 
-    /**
-     * @method validateWebhookConfigurations
-     * This method will validate the webhook configuration
-     * @return array
-     */
-    public function validateWebhookConfigurations() : array
-    {
-        return (new WebhookUrlConfigurationsValidator($this->configurations, true))->validate();
+
+    public function resolveConfigurationsWithPrefix(array $prefixes, string $key) : mixed {
+        $currentValue = null;
+        foreach($prefixes as $iteration => $prefix) {
+            if ($iteration === 0) {
+                if (! array_key_exists($prefix, $this->configurations)) {
+                    throw new \Exception("Undefined configuration ".$prefix.".".$prefix);
+                }
+                $currentValue = $this->configurations[$prefix];
+            }else {
+                if (! array_key_exists($prefix, $currentValue)) {
+                    throw new \Exception("Undefined configuration ".$prefix.".".$key);
+                }
+                $currentValue = $currentValue[$prefix];
+            }
+        }
+        return $currentValue[$key];
     }
-   
-   /**
-     * @method validateRedirectConfigurations
-     * This method will validate the redirect configuration
-     * @return array
-     */
-    public function validateRedirectConfigurations() : array
-    {
-        return (new RedirectUrlConfigurationsValidator($this->configurations, true))->validate();
+
+    public function validateConfiguration($validator) : array {
+        return (new $validator($this->configurations))->validate();
     }
 
     /**
@@ -98,8 +101,9 @@ class Configuration
     public function defualtConfiguration() : array 
     {
         return [
-            "headers" => [],
-            "timeout" => 20
+            "headers"   =>  [],
+            "timeout"   =>  30,
+            "debug"     =>  true
         ];
     }
 }
