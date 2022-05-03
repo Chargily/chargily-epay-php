@@ -52,6 +52,11 @@ class RedirectUrl
 
         $response = $this->getResponse()->getBody()->getContents();
         $content_to_array = json_decode($response, true);
+
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new \RuntimeException('Unable to parse response body from server into JSON: ' . json_last_error());
+        }
+
         return $content_to_array['checkout_url'];
     }
 
