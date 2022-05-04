@@ -119,6 +119,7 @@ if ($chargily->checkResponse()) {
 }
 
 ```
+- Guide for testing your webhook (process) url [Click Here](https://github.com/Chargily/epay-gateway-php/blob/main/README_WEBHOOK.md)
 
 # Configurations
 
