@@ -1,3 +1,5 @@
-dist
-vendor
-composer.lock
+/dist
+/vendor
+/composer.lock
+redirect.php
+webhook.php
