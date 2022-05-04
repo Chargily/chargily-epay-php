@@ -40,13 +40,14 @@ class WebhookUrl
     public function __construct(Configuration $configurations)
     {
         $this->configurations = $configurations;
+        $configurations->validateWebhookConfigurations();
     }
     /**
      * checkResponse
      *
      * @return bool
      */
-    public function check() : bool
+    public function check(): bool
     {
         $computedSignature = hash_hmac('sha256', $this->getContent(), $this->configurations->getApiSecret());
 
@@ -57,7 +58,7 @@ class WebhookUrl
      *
      * @return array
      */
-    public function getResponseDetails() : array
+    public function getResponseDetails(): array
     {
         return $this->getContentToArray() ?? [];
     }
@@ -67,7 +68,7 @@ class WebhookUrl
      *
      * @return string
      */
-    protected function getSignature() : string
+    protected function getSignature(): string
     {
         if (isset($this->getHeaders()['signature'])) {
             return $this->getHeaders()['signature'];
@@ -81,7 +82,7 @@ class WebhookUrl
      *
      * @return null|string
      */
-    protected function getContent() : ?string
+    protected function getContent(): ?string
     {
         return $this->cachedContent = ($this->cachedContent) ? $this->cachedContent : file_get_contents("php://input");
     }
@@ -90,7 +91,7 @@ class WebhookUrl
      *
      * @return array
      */
-    protected function getContentToArray() : array
+    protected function getContentToArray(): array
     {
         return json_decode($this->getContent(), true) ?? [];
     }
@@ -99,7 +100,7 @@ class WebhookUrl
      *
      * @return array
      */
-    protected function getHeaders() : array
+    protected function getHeaders(): array
     {
         return $this->cachedHeaders = ($this->cachedHeaders) ? $this->cachedHeaders : getallheaders();
     }

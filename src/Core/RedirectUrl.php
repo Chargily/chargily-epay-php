@@ -36,6 +36,7 @@ class RedirectUrl
     public function __construct(Configuration $configurations)
     {
         $this->configurations = $configurations;
+        $configurations->validateRedirectConfigurations();
     }
 
     /**
@@ -44,9 +45,9 @@ class RedirectUrl
      * @throws InvalidResponseException
      * @return string
      */
-    public function getRedirectUrl() : string
+    public function getRedirectUrl(): string
     {
-        if ($response = $this->validateResponse() AND $response !== true) {
+        if ($response = $this->validateResponse() and $response !== true) {
             throw new InvalidResponseException("Invalid response status code ({$response->getStatusCode()}) when trying to get redirect url . More info (" . $response->getBody()->getContents() . ')');
         }
 
@@ -68,7 +69,7 @@ class RedirectUrl
      * @method validateResponse
      * @return mixed
      */
-    protected function validateResponse() : mixed
+    protected function validateResponse(): mixed
     {
         $response = $this->getResponse();
         if ($response->getStatusCode() !== 201) {
@@ -81,7 +82,7 @@ class RedirectUrl
      * @method buildRequest
      * @return array
      */
-    protected function buildRequest() : array
+    protected function buildRequest(): array
     {
         $headers = array_merge(['Accept' => 'application/json', 'X-Authorization' => $this->configurations->getApiKey()], $this->configurations->from("options")->getHeaders());
         return [

@@ -28,16 +28,19 @@ class Chargily
      */
     public function __construct(array|Configuration $configurations)
     {
-        $this->configurations = new Configuration($configurations);
-        $this->configurations->validateRedirectConfigurations();
+        if (is_array($configurations)) {
+            $this->configurations = new Configuration($configurations);
+        } else {
+            $this->configurations = $configurations;
+        }
     }
     /**
      * getRedirectUrl
      *
      * @return null|string
      */
-    public function getRedirectUrl() : string
-    {   
+    public function getRedirectUrl(): string
+    {
         return $this->cachedRedirectUrl = ($this->cachedRedirectUrl) ? $this->cachedRedirectUrl : (new RedirectUrl($this->configurations))->getRedirectUrl();
     }
     /**
