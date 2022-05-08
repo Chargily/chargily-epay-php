@@ -8,7 +8,7 @@ Integrate ePayment gateway with Chargily easily.
 
 # Requirements
 1. PHP 7.2.5 or later. 
-2. Get your API Key/Secret from [ePay by Chargily](https://epay.chargily.com.dz) dashboard for free.
+2. Get your API Key/Secret from [ePay by Chargily](https://epay.chargily.com) dashboard for free.
 
 # Installation
 1. Via Composer (Recomended)
