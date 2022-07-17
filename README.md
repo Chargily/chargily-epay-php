@@ -13,7 +13,7 @@ Integrate ePayment gateway with Chargily easily.
 # Installation
 1. Via Composer (Recomended)
 ```bash
-composer require chargily-epay-gateway
+composer require chargily/epay-php
 ```
 2. Download as ZIP
 We do not recommend this option. But be careful to download the updated versions every a while [Download](https://github.com/Chargily/epay-gateway-php/releases/)
