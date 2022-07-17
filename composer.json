@@ -1,7 +1,7 @@
 {
-    "name": "chargily/epay-gateway",
+    "name": "chargily/epay-php",
     "type": "library",
-    "description": "Chargily ePay Gateway For PHP",
+    "description": "PHP Library for Chargily ePay Gateway integration",
     "keywords": ["Chargily-ePay-Gateway","epay","epaiment","epay.chargily.com.dz","chargily","satim","cib","cibweb","php"],
     "license": "MIT",
     "authors": [
@@ -13,9 +13,9 @@
     ],
     "require": {
     	"php": "^8.0.2",
-        "guzzlehttp/guzzle": "^7.0",
-        "laravel/helpers": "^1.5",
-        "rakit/validation": "^1.4"
+      "guzzlehttp/guzzle": "^7.0",
+      "laravel/helpers": "^1.5",
+      "rakit/validation": "^1.4"
   	},
     "autoload": {
       "psr-4": {
